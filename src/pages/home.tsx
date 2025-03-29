@@ -1,46 +1,27 @@
-import React, { useEffect } from 'react'
-import { ProductType } from '../components/ProductType';
-import { useState } from 'react';
+import React from 'react'
+// import { useState } from 'react';
+import '../index.css'
+import { useQuizStore } from '../stores/Quiz-store';
+import { useNavigate } from 'react-router-dom';
 
-const Quiz: ProductType[] = [ 
-    {
-        id: 1,
-        question: "What is the capital of France?",
-        answer: ['paris', 'london', 'berlin', 'madrid'],
-        trueAns: "Paris",
-    },
-    {
-        id: 2,
-        question: "What is the capital of Syria?",
-        answer: ['paris', 'damascus', 'berlin', 'cairo'],
-        trueAns: "Damascus",
-    },
-    {
-        id: 3,
-        question: "What is the capital of Iraq?",
-        answer: ['baghdad', 'homs', 'abu dhabi', 'madrid'],
-        trueAns: "Baghdad",
-    },
-    {
-        id: 4,
-        question: "What is the capital of Egypt?",
-        answer: ['Cairo', 'london', 'berlin', 'madrid'],
-        trueAns: 'Cairo'
-    },
-    
-    {
-        id: 5,
-        question: "What is the capital of UAE?",
-        answer: ['paris', 'Abu-Dhabi', 'berlin', 'madrid'],
-        trueAns: "Abu-Dhabi",
-    },
-]
+
 const Home = () => {
-    const [quiz, setQuiz] = useState<ProductType[]>(Quiz);
-    useEffect(() => {
 
-        setQuiz(Quiz);
-    },[])
+    const {allQuestions, currentQuestion, setCurrentQuestion, checkAnswer , score , userAnswers} = useQuizStore()
+    const [scorey, setScorey] = React.useState(0)
+    
+    const next = () => {
+        {currentQuestion < allQuestions.length - 1 ? 
+            setCurrentQuestion(currentQuestion + 1)
+            : 
+            alert("Quiz Completed")}
+    }
+
+    const navigate = useNavigate()
+    const goToRes = () => { 
+        navigate('/result')
+
+    }
 
     return (
 
@@ -48,23 +29,29 @@ const Home = () => {
         <div>
             <h1 className='text-center text-4xl font-bold'>Quiz App</h1>
             <div className='flex flex-col items-center justify-center'>
-                {quiz.map((item) => (
-                    <div key={item.id}>
-                        <h2 className='text-2xl font-semibold'>{item.question}</h2>
-                        <div className='flex flex-col items-center'>
-                            {item.answer.map((ans, index) => (
-                                <button key={index} className='bg-blue-500 text-white p-2 m-2 rounded-md'>{ans}</button>
+                <h2 className='text-2xl font-semibold'>{allQuestions[currentQuestion].question}</h2>
+                    <div className='flex flex-col items-center'>
+                        {allQuestions[currentQuestion].options.map((ans, index) => (
+                            <button key={index}
+                                onClick={() => checkAnswer(ans)} 
+                                className='bg-blue-500 text-white p-2 m-2 rounded-md'>{ans}</button>
+                                
                             ))}
-                        </div>
-                        {/* <p className='text-lg font-semibold'>Correct Answer: {item.trueAns}</p> */}
                     </div>
-                ))}
+
+                    <button onClick={next}>Next</button>
+                    <button onClick={() => setScorey(score)}>Finish</button>
+                    <p >{scorey}</p>
+
+                    <div style={{cursor: 'pointer'}}onClick={goToRes}>Show Full Test</div>
+                    </div>
+                
             </div>  
 
         </div>
-    </div>
     
-  )
+    
+    )
 }
 
 export default Home

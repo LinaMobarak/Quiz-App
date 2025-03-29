@@ -10,8 +10,10 @@ interface Questions {
 interface QuizStore {
     allQuestions: Questions[]
     currentQuestion: number
-    setCurrentQuestion: (index : number) => void
+    setCurrentQuestion: (index: number) => void
     checkAnswer: (selectedOption: string) => boolean
+    score: number
+    userAnswers: string[]
 
 }
 
@@ -53,11 +55,19 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
         answer: "H₂O",
         },
     ],
+    score: 0,
     currentQuestion: 0,
-    setCurrentQuestion: (index:number) => set({ currentQuestion: index }),
+    setCurrentQuestion: (index: number) => set({ currentQuestion: index }),
     checkAnswer: (selectedOption: string) => {
-        const { allQuestions, currentQuestion } = get();
-        return allQuestions[currentQuestion].answer === selectedOption;
+        const { allQuestions, currentQuestion, userAnswers } = get();
+        const isCorrect = allQuestions[currentQuestion].answer === selectedOption;
+        set({
+            userAnswers: [...userAnswers, selectedOption],
+            
+            score: isCorrect ? get().score + 1 : get().score,
+        });
+        return isCorrect;
     },
+    userAnswers: [],
 
 }))
