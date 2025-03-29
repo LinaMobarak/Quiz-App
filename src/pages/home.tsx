@@ -7,10 +7,14 @@ import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
 
-    const {allQuestions, currentQuestion, setCurrentQuestion, checkAnswer , score , userAnswers} = useQuizStore()
+    const {allQuestions, currentQuestion, setCurrentQuestion, checkAnswer , score ,userAnswers} = useQuizStore()
     const [scorey, setScorey] = React.useState(0)
+    const [isShow , setIsShow] = React.useState(true)
     
     const next = () => {
+        
+        setIsShow(!isShow)
+
         {currentQuestion < allQuestions.length - 1 ? 
             setCurrentQuestion(currentQuestion + 1)
             : 
@@ -23,6 +27,14 @@ const Home = () => {
 
     }
 
+    const handleAnswer = (selectedOption: string) => {
+        checkAnswer(selectedOption);
+        const newAnswers = [...userAnswers, selectedOption];
+        useQuizStore.setState({ userAnswers: newAnswers });
+        setIsShow(!isShow)
+
+    };
+
     return (
 
     <div>
@@ -33,13 +45,13 @@ const Home = () => {
                     <div className='flex flex-col items-center'>
                         {allQuestions[currentQuestion].options.map((ans, index) => (
                             <button key={index}
-                                onClick={() => checkAnswer(ans)} 
+                                onClick={() => handleAnswer(ans)} 
                                 className='bg-blue-500 text-white p-2 m-2 rounded-md'>{ans}</button>
                                 
                             ))}
                     </div>
 
-                    <button onClick={next}>Next</button>
+                    <button onClick={next} disabled={isShow} >Next</button>
                     <button onClick={() => setScorey(score)}>Finish</button>
                     <p >{scorey}</p>
 

@@ -5,7 +5,8 @@ import '../index.css'
 const Result = () => {
     const allQuestions = useQuizStore.getState().allQuestions
     const userAnswers = useQuizStore.getState().userAnswers
-    console.log(userAnswers)
+    // console.log(userAnswers)
+    
   return (
 
     <div className='flex flex-col items-center justify-center'>
@@ -17,7 +18,7 @@ const Result = () => {
             <div key={index} className='border p-4 m-2 w-1/2'>
                 <h3 className='text-lg font-semibold'>{question.question}</h3>
                 <p className='text-sm'>Correct Answer: {question.answer}</p>
-                <p className='text-sm'>Your Answer: {useQuizStore.getState().checkAnswer(userAnswers[index]) ? question.answer : "Wrong"}</p>
+                <p className='text-sm'>Your Answer: {userAnswers[index]}</p>
             </div>
         ))}
         

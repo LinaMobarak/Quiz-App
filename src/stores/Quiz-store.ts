@@ -56,18 +56,17 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
         },
     ],
     score: 0,
+    userAnswers: [],
+
     currentQuestion: 0,
-    setCurrentQuestion: (index: number) => set({ currentQuestion: index }),
+    setCurrentQuestion: (index:number) => set({ currentQuestion: index }),
     checkAnswer: (selectedOption: string) => {
-        const { allQuestions, currentQuestion, userAnswers } = get();
+        const { allQuestions, currentQuestion } = get();
         const isCorrect = allQuestions[currentQuestion].answer === selectedOption;
-        set({
-            userAnswers: [...userAnswers, selectedOption],
-            
-            score: isCorrect ? get().score + 1 : get().score,
-        });
+        if (isCorrect) {
+            set({ score: get().score + 1 });
+        }
         return isCorrect;
     },
-    userAnswers: [],
 
 }))
